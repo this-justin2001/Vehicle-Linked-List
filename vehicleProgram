@@ -32,7 +32,9 @@ Double mpg;
 			}
 		}
 	}
-	
+	public static String loopMessage() { //provides message for loop, avoids duplicate code
+		return "Enter 0 for MPG to end input";
+	}
 	public static void main(String[] args)throws IOException {//exception thrown if issue with file arises
 		//users entries
 		String userMake; 
@@ -49,7 +51,7 @@ Double mpg;
 		LinkedList<Vehicle> vehicleList = new LinkedList<Vehicle>(); //instantiates LinkedList
 		
 		System.out.println("Please Enter Vehicle Information");
-		System.out.println("Enter 0 for MPG to end input");
+		System.out.println(loopMessage());//;prints loopMessage()
 		System.out.println();
 		System.out.println("MPG: ");
 		
@@ -64,7 +66,7 @@ Double mpg;
 			vehicleList.add(new Vehicle(userMake,userModel,userMpg));//adds new object to LinkedList
 			
 			System.out.println();
-			System.out.println("Enter 0 for MPG to end input");
+			System.out.println(loopMessage());//;prints loopMessage()
 			System.out.println();
 			System.out.println("MPG: ");
 			userMpg = scnr.nextDouble(); //end of loop
