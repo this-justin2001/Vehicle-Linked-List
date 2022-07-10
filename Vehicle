@@ -1,0 +1,24 @@
+public class Vehicle { 
+private String make;
+private String model;
+private Double mpg;
+
+Vehicle (String objMake, String objModel, double objMpg){ //vehicle object constructor
+	this.make = objMake; 
+	this.model = objModel;
+	this.mpg = objMpg;
+}
+public Double compareTo(Vehicle otherVehicle) { //compare method
+	Double compareValue; 
+	
+	compareValue = (double)mpg.compareTo(otherVehicle.mpg); //compares mpg value to previous element
+	
+	return compareValue; //returns Double value
+}
+public String toString() { //formats printed LinkedList
+	System.out.println("--------------"); //divides elements
+	System.out.println("Make: " + make);
+	System.out.println("Model: " + model);
+	return "MPG: " + mpg;
+	}
+}
