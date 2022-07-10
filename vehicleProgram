@@ -1,0 +1,118 @@
+import java.util.*;
+import java.io.*;
+
+public class vehicleProgram {
+String make; 
+String model;
+Double mpg;
+	private static void sortByMPG(LinkedList<Vehicle> vehicleList) { //method to sort by MPG
+		if(vehicleList.size() >= 2) {
+			LinkedList<Vehicle> left = new LinkedList<>(); //creates "left" sublist
+			left.addAll(vehicleList.subList(0,vehicleList.size()/2)); //adds left half of LinkedList to sublist
+			
+			LinkedList<Vehicle> right = new LinkedList<>(); //creates "right" sublist
+			right.addAll(vehicleList.subList(vehicleList.size()/2, vehicleList.size())); //adds right half of LinkedList to sublist
+			
+			sortByMPG(left); //splits left sublists in half to sort
+			sortByMPG(right); //splits right sublist in half to sort
+			mergeSort(vehicleList,left,right); //calls merge method to sort entire LinkedList
+		}
+	}
+	private static void mergeSort(LinkedList<Vehicle> result, LinkedList<Vehicle> left, LinkedList<Vehicle> right) {//merge sort method imports lists & sublists from sort method
+		int count1 = 0; //sublist count 1
+		int count2 = 0; //sublist count 2
+		
+		for(int i = 0; i < result.size();i++) {//iterating loop
+			if(count2 >= right.size() || (count1 < left.size() && left.get(count1).compareTo(right.get(count2)) <0)) {//compares mpg values
+				result.set(i, left.get(count1)); //sets sorted mpg value to respective iteration
+				count1++; //moves count
+			} else {
+				result.set(i, right.get(count2)); //sets sorted mpg value to respective iteration
+				count2++; //moves count
+			}
+		}
+	}
+	
+	public static void main(String[] args)throws IOException {//exception thrown if issue with file arises
+		//users entries
+		String userMake; 
+		String userModel;
+		Double userMpg;
+		char confirmation;
+		
+		Scanner scnr = new Scanner(System.in);
+		FileOutputStream fileByteStream = null; //opens file writer
+		PrintWriter outFS = null; //opens print writer
+		
+		fileByteStream = new FileOutputStream("Vehicles.txt"); //creates file
+		outFS = new PrintWriter(fileByteStream); 
+		LinkedList<Vehicle> vehicleList = new LinkedList<Vehicle>(); //instantiates LinkedList
+		
+		System.out.println("Please Enter Vehicle Information");
+		System.out.println("Enter 0 for MPG to end input");
+		System.out.println();
+		System.out.println("MPG: ");
+		
+		userMpg = scnr.nextDouble(); //user MPG entry
+		while(userMpg != 0) { //loop that allows user to enter multiple values
+			System.out.println("Make: ");
+			userMake = scnr.next();//user make entry
+			
+			System.out.println("Model: ");
+			userModel = scnr.next();//user model entry
+
+			vehicleList.add(new Vehicle(userMake,userModel,userMpg));//adds new object to LinkedList
+			
+			System.out.println();
+			System.out.println("Enter 0 for MPG to end input");
+			System.out.println();
+			System.out.println("MPG: ");
+			userMpg = scnr.nextDouble(); //end of loop
+		}
+		if(userMpg == 0) {//condition to end user entry loop
+			for(int i = 0; i < vehicleList.size();i++) { //iterative loop to print LinkedList
+				System.out.println(vehicleList.get(i).toString());//prints LinkedList and calls toString()
+			}
+			
+			System.out.println();
+			System.out.println("Are these the correct entries?");
+			System.out.println("Y or N");
+			System.out.println();
+			confirmation = scnr.next().charAt(0); //used to confirm if user input correct entries
+			
+			if (confirmation == 'y' || confirmation == 'Y') { 
+				System.out.println("Would you like these entries sorted and printed to a file?");
+				System.out.println("Y or N");
+				System.out.println();
+				confirmation = scnr.next().charAt(0);
+				
+				if (confirmation == 'Y' || confirmation == 'y') { //if user enters "y" or "Y", confirms if user wants entries printed to file
+					sortByMPG(vehicleList); //sorts vehicleList with merge sort
+					System.out.println("Here is the list printed to the file");
+					System.out.println();
+					
+					outFS.println("SORTED LIST OF VEHICLES");//title printed to .txt file
+					outFS.println("--------------");
+					outFS.flush();
+					for(int i = 0; i < vehicleList.size();i++) {
+						System.out.println(vehicleList.get(i).toString());//prints list to console
+						
+						outFS.println(vehicleList.get(i).toString());//prints list to file
+					}
+				}else if(confirmation == 'n' || confirmation =='N'){ //prints list to console only if user enters N to line 83
+					System.out.println("Okay! Here is the sorted list for your records");
+					System.out.println();
+					sortByMPG(vehicleList); //sorts vehicleList
+					for(int i = 0; i < vehicleList.size();i++) {
+						System.out.println(vehicleList.get(i).toString()); //prints sorted LinkedList
+					}
+					System.out.println();
+					System.out.println("Good Bye :)"); 
+					fileByteStream.close();//closes file writer
+				}
+			}else {
+				System.out.println("No Problem! Re-run and enter the correct information");//has user restart program is entries are wrong
+			}
+		}
+	}
+}
